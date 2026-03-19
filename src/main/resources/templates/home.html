@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MV CINEMA</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link th:href="@{/assets/app.css}" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{fragments :: loadingOverlay}"></div>
+<div th:replace="~{fragments :: navbar}"></div>
+
+<main class="container my-4">
+  <div class="hero-carousel mb-4"
+       th:if="${latest != null && latest.items != null && !latest.items.isEmpty()}">
+    <div id="featuredCarousel" class="carousel slide hero"
+         data-bs-ride="carousel"
+         data-bs-interval="4500"
+         data-bs-pause="false"
+         data-bs-touch="true">
+
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#featuredCarousel"
+                th:each="it, st : ${latest.items}"
+                th:if="${st.index < 8}"
+                th:classappend="${st.index == 0} ? ' active' : ''"
+                th:attr="data-bs-slide-to=${st.index},aria-current=${st.index == 0 ? 'true' : null},aria-label=${'Slide ' + (st.index + 1)}"></button>
+      </div>
+
+      <div class="carousel-inner">
+        <div class="carousel-item"
+             th:each="it, st : ${latest.items}"
+             th:if="${st.index < 8}"
+             th:classappend="${st.index == 0} ? ' active' : ''">
+          <div class="hero-slide p-4 p-md-5"
+               th:style="'background-image: linear-gradient(90deg, rgba(0,0,0,0.86) 0%, rgba(0,0,0,0.55) 45%, rgba(0,0,0,0.10) 100%), url(' + ${imgFallback.apply(it.poster_url, it.thumb_url, it.slug)} + ');'">
+            <div class="row align-items-center g-4">
+              <div class="col-12 col-lg-7">
+                <div class="text-uppercase fw-semibold" style="color: rgba(229,9,20,0.95); letter-spacing: .18em;">
+                  Featured
+                </div>
+                <h1 class="display-6 fw-bold mt-2 mb-2" th:text="${it.name}">Featured title</h1>
+                <div class="hero-meta mb-3">
+                  <span th:text="${it.origin_name}"></span>
+                  <span th:if="${it.year != null}" th:text="' • ' + ${it.year}"></span>
+                  <span th:if="${it.quality != null && !it.quality.isBlank()}" th:text="' • ' + ${it.quality}"></span>
+                </div>
+                <div class="d-flex gap-2 flex-wrap">
+                  <a class="btn btn-primary hero-btn" th:href="@{|/watch/${it.slug}|}">PLAY</a>
+                  <a class="btn btn-outline-secondary hero-btn" th:href="@{|/film/${it.slug}|}">MORE INFO</a>
+                  <a class="btn btn-outline-secondary hero-btn" th:href="@{/browse/phim-moi-cap-nhat}">BROWSE</a>
+                </div>
+              </div>
+              <div class="col-12 col-lg-5 d-none d-lg-block">
+                <div class="ratio ratio-2x3 rounded overflow-hidden border" style="border-color: var(--border) !important;">
+                  <img class="w-100 h-100" style="object-fit: cover;" th:src="${imgFallback.apply(it.poster_url, it.thumb_url, it.slug)}" th:alt="${it.name}">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button class="carousel-control-prev" type="button" data-bs-target="#featuredCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#featuredCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="row g-4 align-items-start">
+    <div class="col-12 col-lg-9">
+      <div class="home-section-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <h2 class="h5 mb-0 section-title">Phim mới cập nhật</h2>
+        <a class="btn btn-sm btn-outline-secondary" th:href="@{/browse/phim-moi-cap-nhat}">Browse with filters</a>
+      </div>
+
+      <div class="row movie-grid row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-3 mt-1">
+        <div class="col d-flex" th:each="it : ${latest.items}">
+          <div class="w-100" th:replace="~{fragments :: movieCard(${it})}"></div>
+        </div>
+      </div>
+
+      <nav class="mt-4" aria-label="pagination" th:if="${latest.pagination.totalPages > 1}">
+    <ul class="pagination">
+      <li class="page-item" th:classappend="${latest.pagination.currentPage == 1} ? 'disabled'">
+        <a class="page-link" th:href="@{/(page=${latest.pagination.currentPage - 1})}">Prev</a>
+      </li>
+      <li class="page-item disabled">
+        <span class="page-link">
+          Page <span th:text="${latest.pagination.currentPage}"></span>/<span th:text="${latest.pagination.totalPages}"></span>
+        </span>
+      </li>
+      <li class="page-item" th:classappend="${latest.pagination.currentPage == latest.pagination.totalPages} ? 'disabled'">
+        <a class="page-link" th:href="@{/(page=${latest.pagination.currentPage + 1})}">Next</a>
+      </li>
+    </ul>
+      </nav>
+    </div>
+
+    <aside class="col-12 col-lg-3">
+      <section class="recommendation-sidebar" th:if="${recommendations != null && !recommendations.isEmpty()}">
+        <div class="home-section-header">
+          <h2 class="h5 mb-0 section-title">ĐỀ XUẤT PHIM</h2>
+        </div>
+        <ul class="recommendation-list list-unstyled mb-0 mt-1">
+          <li class="recommendation-item" th:each="rec : ${recommendations}">
+            <a th:href="@{|/film/${rec.slug}|}" class="recommendation-link d-flex gap-2 align-items-start">
+              <span class="recommendation-poster-wrap flex-shrink-0">
+                <img class="recommendation-poster" th:src="${rec.posterUrl}" th:alt="${rec.name}" loading="lazy">
+              </span>
+              <span class="recommendation-info flex-grow-1 min-w-0">
+                <span class="recommendation-title d-block fw-bold text-truncate" th:text="${rec.name}">Title</span>
+                <span class="recommendation-year d-block small text-secondary" th:text="${rec.year != null ? rec.year : ''}">2020</span>
+                <span class="recommendation-stars d-block mt-1" aria-label="Điểm: 5 sao">
+                  <span th:each="star : ${#numbers.sequence(1, 5)}" class="star" th:classappend="${star <= T(java.lang.Math).round(rec.rating / 2.0)} ? 'star-full' : 'star-empty'">★</span>
+                </span>
+              </span>
+            </a>
+          </li>
+        </ul>
+      </section>
+    </aside>
+  </div>
+</main>
+
+<div th:replace="~{fragments :: footer}"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+(function () {
+  var overlay = document.getElementById('loadingOverlay');
+  if (!overlay) return;
+  window.addEventListener('load', function () {
+    overlay.classList.add('hidden');
+  });
+})();
+</script>
+</body>
+</html>
+

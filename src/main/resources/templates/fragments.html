@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<header th:fragment="navbar">
+  <div class="site-header sticky-top border-bottom">
+    <div class="topbar py-3">
+      <div class="container">
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+          <a class="brand d-flex align-items-center gap-2 text-decoration-none" th:href="@{/}">
+            <img class="brand-logo" th:src="@{/img/logo.png}" alt="MV CINEMA">
+          </a>
+
+          <form class="search flex-grow-1 d-flex align-items-center order-3 order-lg-2 w-100 w-lg-auto"
+                role="search" th:action="@{/search}" method="get">
+            <input class="form-control search-input" type="search" name="q" placeholder="Nhập tên phim bạn muốn tìm kiếm..." th:value="${keyword}">
+            <button class="btn btn-primary search-btn" type="submit" aria-label="Search">
+              <span class="visually-hidden">Search</span>
+              <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                   xmlns="http://www.w3.org/2000/svg" style="display:block">
+                <path d="M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z" stroke="white" stroke-width="2" opacity="0.92"/>
+                <path d="M16.5 16.5 21 21" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.92"/>
+              </svg>
+            </button>
+          </form>
+
+          <div class="actions d-none d-lg-flex align-items-center gap-3 order-2 order-lg-3 ms-lg-auto">
+            <a class="action-link text-decoration-none" th:href="@{/login}">Đăng nhập</a>
+            <a class="action-link text-decoration-none" th:href="@{/register}">Đăng ký</a>
+            <a class="action-link text-decoration-none" th:href="@{/bookmark}">Bookmark</a>
+          </div>
+
+          <button class="navbar-toggler d-lg-none ms-auto order-2" type="button" data-bs-toggle="collapse" data-bs-target="#mainMenu" aria-controls="mainMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu border-top">
+      <div class="container">
+        <div class="collapse d-lg-block" id="mainMenu">
+          <ul class="menu-links nav">
+            <li class="nav-item"><a class="nav-link" th:href="@{/browse/phim-moi-cap-nhat}">PHIM MỚI</a></li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/browse/phim-bo}">PHIM BỘ</a></li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/browse/phim-le}">PHIM LẺ</a></li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/browse/phim-chieu-rap}">PHIM CHIẾU RẠP</a></li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/browse/hoat-hinh}">HOẠT HÌNH</a></li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/browse/tv-shows}">TV SHOWS</a></li>
+            <li class="nav-item d-lg-none mt-2">
+              <div class="d-flex gap-3">
+                <a class="action-link text-decoration-none" th:href="@{/login}">Đăng nhập</a>
+                <a class="action-link text-decoration-none" th:href="@{/register}">Đăng ký</a>
+                <a class="action-link text-decoration-none" th:href="@{/bookmark}">Bookmark</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<footer th:fragment="footer" class="border-top mt-5 py-4">
+  <div class="container small d-flex justify-content-between flex-wrap gap-2" style="color: rgba(255,255,255,0.55);">
+    <span>MV CINEMA • Built with Spring Boot + OPhim API</span>
+    <span th:text="${T(java.time.Year).now()}"></span>
+  </div>
+</footer>
+
+<div th:fragment="movieCard(item)">
+  <div class="card h-100 movie-card">
+    <div class="movie-card-poster-wrap">
+      <a th:href="@{|/film/${item.slug}|}" class="text-decoration-none d-block">
+        <img class="poster" th:src="${imgFallback.apply(item.poster_url, item.thumb_url, item.slug)}" th:alt="${item.name}">
+      </a>
+      <span class="coming-soon-badge"
+            th:if="${item.episode_current != null and #strings.containsIgnoreCase(item.episode_current,'trailer')}"
+            aria-label="Coming Soon">COMING SOON</span>
+    </div>
+    <div class="card-body movie-card-body">
+      <a th:href="@{|/film/${item.slug}|}" class="text-decoration-none">
+        <div class="fw-semibold movie-title" style="color: var(--text);" th:text="${item.name}"></div>
+      </a>
+      <div class="small movie-card-origin" style="color: var(--muted);" th:text="${item.origin_name}"></div>
+      <div class="small mt-1 movie-card-meta" style="color: rgba(255,255,255,0.60);">
+        <span th:text="${item.year}"></span>
+        <span th:if="${item.quality != null && !item.quality.isBlank()}" th:text="' • ' + ${item.quality}"></span>
+        <span th:if="${item.lang != null && !item.lang.isBlank()}" th:text="' • ' + ${item.lang}"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Loading / Error Overlay -->
+<div th:fragment="loadingOverlay" id="loadingOverlay" class="loading-overlay">
+  <div class="loading-content">
+    <img class="loading-logo" th:src="@{/img/loading.png}" alt="Loading">
+    <div class="loading-spinner"></div>
+  </div>
+</div>
+
+</body>
+</html>
+

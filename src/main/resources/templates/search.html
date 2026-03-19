@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="'Search • ' + ${keyword} + ' • MV CINEMA'">Search</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link th:href="@{/assets/app.css}" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{fragments :: loadingOverlay}"></div>
+<div th:replace="~{fragments :: navbar}"></div>
+
+<main class="container my-4">
+  <h1 class="h5 section-title" th:text="${resp.data.titlePage}">Search</h1>
+
+  <div class="row movie-grid row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-3 mt-1">
+    <div class="col d-flex" th:each="it : ${resp.data.items}">
+      <div class="w-100" th:replace="~{fragments :: movieCard(${it})}"></div>
+    </div>
+  </div>
+
+  <nav class="mt-4" aria-label="pagination"
+       th:if="${totalPages > 1}">
+    <ul class="pagination">
+      <li class="page-item" th:classappend="${page == 1} ? 'disabled'">
+        <a class="page-link" th:href="@{/search(q=${keyword},page=${page - 1})}">Prev</a>
+      </li>
+      <li class="page-item disabled">
+        <span class="page-link">
+          Page <span th:text="${page}"></span>/<span th:text="${totalPages}"></span>
+        </span>
+      </li>
+      <li class="page-item" th:classappend="${page >= totalPages} ? 'disabled'">
+        <a class="page-link" th:href="@{/search(q=${keyword},page=${page + 1})}">Next</a>
+      </li>
+    </ul>
+  </nav>
+</main>
+
+<div th:replace="~{fragments :: footer}"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+<script>
+(function () {
+  var overlay = document.getElementById('loadingOverlay');
+  if (!overlay) return;
+  window.addEventListener('load', function () { overlay.classList.add('hidden'); });
+})();
+</script>
+

@@ -1,0 +1,37 @@
+server:
+  port: 8081
+  address: 0.0.0.0
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  tomcat:
+    uri-encoding: UTF-8
+
+spring:
+  thymeleaf:
+    cache: false
+    encoding: UTF-8
+  web:
+    resources:
+      cache:
+        period: 0
+
+ophim:
+  base-url: "https://ophim1.com"
+  image-base-url: "https://img.ophim.live/uploads/movies/"
+  request-timeout-ms: 8000
+
+cache:
+  ttl-seconds:
+    lists: 60
+    movie: 300
+    taxonomy: 3600
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,caches"
+
