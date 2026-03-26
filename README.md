@@ -6,14 +6,14 @@ A simple film browsing + watching website built with **Spring Boot + Thymeleaf**
 ### 1. Trang chủ (Home Page)
 ![Home Page](img/HOME%20PAGE.png)
 
-### 2. Trang tải phim (Loading Page)
-![Loading Movie](img/LOADING%20MOVIE%20PAGE.png)
-
-### 3. Chi tiết phim (Movie Detail)
+### 2. Chi tiết phim (Movie Detail)
 ![Movie Detail](img/MOVIE%20DETAIL%20PAGE.png)
 
-### 4. Xem phim (Watch Page)
+### 3. Xem phim (Watch Page)
 ![Movie Watch](img/MOVIE%20WATCH%20PAGE.png)
+
+### 4. Trang tải phim (Loading Page)
+![Loading Movie](img/LOADING%20MOVIE%20PAGE.png)
 ## Requirements
 
 - Java 17+
