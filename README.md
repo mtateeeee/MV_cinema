@@ -1,18 +1,18 @@
 # MV CINEMA (Spring Boot + OPhim API)
 
 A simple film browsing + watching website built with **Spring Boot + Thymeleaf**, using the **OPhim API** as the data source.
-## Màn hình ứng dụng
+## User Interface Previews
 
-### 1. Trang chủ (Home Page)
+### 1. Home Screen
 ![Home Page](img/HOME%20PAGE.png)
 
-### 2. Chi tiết phim (Movie Detail)
+### 2. Movie Detail Screen
 ![Movie Detail](img/MOVIE%20DETAIL%20PAGE.png)
 
-### 3. Xem phim (Watch Page)
+### 3. Playback / Watching Screen
 ![Movie Watch](img/MOVIE%20WATCH%20PAGE.png)
 
-### 4. Trang tải phim (Loading Page)
+### 4. Movie Loading Screen
 ![Loading Movie](img/LOADING%20MOVIE%20PAGE.png)
 ## Requirements
 
